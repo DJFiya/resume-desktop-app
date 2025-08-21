@@ -1,2 +1,3 @@
 PySimpleGUI
 jinja2
+pytest
