@@ -57,8 +57,8 @@ class BulletPoint:
     def __init__(self, text: str):
         if not text:
             raise ValueError("Bullet point text cannot be empty.")
-        if len(text) > 100:
-            raise ValueError("Bullet point text cannot exceed 100 characters.")
+        if len(text) > 255:
+            raise ValueError("Bullet point text cannot exceed 255 characters.")
         self.text = text
     
     def to_dict(self) -> dict:
