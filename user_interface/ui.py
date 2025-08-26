@@ -27,6 +27,7 @@ try:
         Resume
     )
     from models.type_validator import Date, Email, GitHub, LinkedIn, PhoneNumber, Website
+    from latex.converter import load_json_and_generate_latex
 except Exception as e:
     # We don't crash on import so the user sees a clear message in the UI.
     Header = SkillType = SkillSection = BulletPoint = Experience = ExperienceSection = None
@@ -1094,9 +1095,36 @@ class ResumeMakerApp(ttk.Frame):
         messagebox.showinfo("Loaded", f"Loaded from {path}")
 
     def on_export(self):
-        # For now, just stub this out per your spec.
-        messagebox.showinfo("Export", "LaTeX export not yet implemented")
-        print("LaTeX export not yet implemented")
+        # Ask for saved JSON file
+        json_path = filedialog.askopenfilename(
+            filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
+            title="Select Resume JSON to Export"
+        )
+        if not json_path:
+            return
+
+        try:
+            latex_code = load_json_and_generate_latex(json_path)
+        except Exception as ex:
+            messagebox.showerror("Error", f"Failed to generate LaTeX: {ex}")
+            return
+
+        # Ask where to save LaTeX file
+        tex_path = filedialog.asksaveasfilename(
+            defaultextension=".tex",
+            filetypes=[("LaTeX files", "*.tex"), ("All files", "*.*")],
+            title="Save LaTeX As"
+        )
+        if not tex_path:
+            return
+
+        try:
+            with open(tex_path, "w", encoding="utf-8") as f:
+                f.write(latex_code)
+            messagebox.showinfo("Exported", f"Exported LaTeX to {tex_path}")
+        except Exception as ex:
+            messagebox.showerror("Error", f"Failed to save LaTeX:\n{ex}")
+
 
 # -------------------------
 # Entrypoint

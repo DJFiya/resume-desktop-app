@@ -2,3 +2,4 @@
 __pycache__/
 .pytest_cache/
 saved_data/
+saved_tex_files/
